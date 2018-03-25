@@ -181,22 +181,22 @@ impl BFVM {
 
     pub fn show(&mut self) {
         let i = self.memory.index;
-        print!(
+        eprint!(
             "{:>3}:{:}",
             self.program.index,
             self.program[self.program.index]
         );
         if self.memory.index >= 1 {
             for s in self.memory.v[0..self.memory.index].iter() {
-                print!("{:>3} ", s);
+                eprint!("{:>3} ", s);
             }
         }
-        print!("{:>3}@", self.memory.v[self.memory.index]);
+        eprint!("{:>3}@", self.memory.v[self.memory.index]);
 
         for s in self.memory.v[self.memory.index + 1..].iter() {
-            print!("{:>3} ", s);
+            eprint!("{:>3} ", s);
         }
-        println!();
+        eprintln!();
     }
 
     pub fn run(&mut self) {
@@ -207,7 +207,7 @@ impl BFVM {
     }
 }
 
-const MEMSIZE: usize = 20;
+const MEMSIZE: usize = 10;
 
 fn parse_char(character: char) -> Option<Instruction> {
     match character {
