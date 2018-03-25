@@ -1,6 +1,7 @@
 use std;
 use std::ops::Index;
 use std::ops::IndexMut;
+use std::fmt;
 
 #[derive(Debug)]
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -14,6 +15,22 @@ pub enum Instruction {
     Begin,
     End,
 }
+
+impl fmt::Display for Instruction {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Right => write!(f, ">"),
+            Left => write!(f, "<"),
+            Inc => write!(f, "+"),
+            Dec => write!(f, "-"),
+            Put => write!(f, "."),
+            Get => write!(f, ","),
+            Begin => write!(f, "["),
+            End => write!(f, "]"),
+        }
+    }
+}
+
 use self::Instruction::*;
 
 #[derive(Debug)]
@@ -83,12 +100,6 @@ impl BFVM {
     }
 
     fn issue(&mut self) {
-        println!(
-            "{:?}: {:?}@{:?}",
-            self.program.index,
-            &self.memory.index,
-            &self.memory.v[0..20]
-        );
         match self.program.read() {
             Right => {
                 self.memory.right();
@@ -168,14 +179,35 @@ impl BFVM {
         };
     }
 
+    pub fn show(&mut self) {
+        let i = self.memory.index;
+        print!(
+            "{:>3}:{:}",
+            self.program.index,
+            self.program[self.program.index]
+        );
+        if self.memory.index >= 1 {
+            for s in self.memory.v[0..self.memory.index].iter() {
+                print!("{:>3} ", s);
+            }
+        }
+        print!("{:>3}@", self.memory.v[self.memory.index]);
+
+        for s in self.memory.v[self.memory.index + 1..].iter() {
+            print!("{:>3} ", s);
+        }
+        println!();
+    }
+
     pub fn run(&mut self) {
         while !self.is_finished() {
+            self.show();
             self.issue()
         }
     }
 }
 
-const MEMSIZE: usize = 30000;
+const MEMSIZE: usize = 20;
 
 fn parse_char(character: char) -> Option<Instruction> {
     match character {
