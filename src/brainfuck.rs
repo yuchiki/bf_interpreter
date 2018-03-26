@@ -3,8 +3,7 @@ use std::ops::Index;
 use std::ops::IndexMut;
 use std::fmt;
 
-#[derive(Debug)]
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Instruction {
     Right,
     Left,
@@ -128,13 +127,12 @@ impl BFVM {
             }
             Get => {
                 let mut input = String::new();
-                std::io::stdin().read_line(&mut input).expect(
-                    "failed to read.",
-                );
+                std::io::stdin()
+                    .read_line(&mut input)
+                    .expect("failed to read.");
 
-                self.memory.update(input.chars().nth(0).expect(
-                    "input is not a number",
-                ) as u8);
+                self.memory
+                    .update(input.chars().nth(0).expect("input is not a number") as u8);
                 self.r();
             }
             Begin => {
@@ -223,7 +221,7 @@ fn parse_char(character: char) -> Option<Instruction> {
         ',' => Some(Get),
         '[' => Some(Begin),
         ']' => Some(End),
-        _ => None,             // comments are ignored.
+        _ => None, // comments are ignored.
     }
 }
 
@@ -263,7 +261,7 @@ fn parse_works() {
 #[test]
 fn vm_works() {
     let sum_of_ten = parse("++++++++++ [[>+>+<<-] >>[<<+>>-] <<-]");
-    let mut vm = BFVM::new(sum_of_ten);
+    let mut vm = BFVM::new(sum_of_ten, false);
     vm.run();
     assert_eq!(vm.memory.v[1], 55);
 }
