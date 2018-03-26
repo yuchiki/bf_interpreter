@@ -4,3 +4,7 @@ version = "0.1.0"
 authors = ["Yuki <yuki08281993@gmail.com>"]
 
 [dependencies]
+docopt = "*"
+docopt_macros = "*"
+serde = "*"
+serde_derive = "*"

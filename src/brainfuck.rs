@@ -77,13 +77,15 @@ impl<T> IndexMut<usize> for PointedVec<T> {
 pub struct BFVM {
     program: PointedVec<Instruction>,
     memory: PointedVec<u8>,
+    is_verbose: bool,
 }
 
 impl BFVM {
-    pub fn new(program: Vec<Instruction>) -> BFVM {
+    pub fn new(program: Vec<Instruction>, is_verbose: bool) -> BFVM {
         BFVM {
             program: PointedVec::<Instruction>::new(program),
             memory: PointedVec::<u8>::new(vec![0; MEMSIZE]),
+            is_verbose: is_verbose,
         }
     }
 
@@ -201,7 +203,9 @@ impl BFVM {
 
     pub fn run(&mut self) {
         while !self.is_finished() {
-            self.show();
+            if self.is_verbose {
+                self.show()
+            }
             self.issue()
         }
     }
