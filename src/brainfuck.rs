@@ -122,7 +122,7 @@ impl BFVM {
                 self.r();
             }
             Put => {
-                println!("{:?}", self.memory.read() as char);
+                print!("{:}", self.memory.read() as char);
                 self.r();
             }
             Get => {
@@ -209,7 +209,7 @@ impl BFVM {
     }
 }
 
-const MEMSIZE: usize = 10;
+const MEMSIZE: usize = 20;
 
 fn parse_char(character: char) -> Option<Instruction> {
     match character {
